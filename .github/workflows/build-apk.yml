@@ -27,7 +27,7 @@ jobs:
       - name: Install dependencies
         run: npm install
 
-      - name: Build website
+      - name: Build website and copy logo
         run: npm run build
 
       - name: Bundle native authentication
@@ -44,8 +44,20 @@ jobs:
           distribution: temurin
           java-version: '21'
 
+      - name: Prepare icon source files
+        run: |
+          mkdir -p assets
+          cp logo.png assets/icon.png
+          cp logo.png assets/splash.png
+
       - name: Add Android platform
         run: npx cap add android
+
+      - name: Install icon generator
+        run: npm install --no-save @capacitor/assets
+
+      - name: Generate Android launcher icons
+        run: npx capacitor-assets generate --android
 
       - name: Sync Capacitor
         run: npx cap sync android
